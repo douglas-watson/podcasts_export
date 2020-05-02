@@ -2,11 +2,11 @@
 #
 #  Podcasts Export
 #  ---------------
-#  Douglas Watson, 2020
+#  Douglas Watson, 2020 Intended for use within an Automator workflow.
 #
-#  Receives the location of Apple Podcasts' database, finds episodes that have
-#  been downloaded, then renames and copies those files into a new folder.
-#
+#  Receives a destination folder, finds Apple Podcasts episodes that have been
+#  downloaded, then copies those files into a new folder giving them a more
+#  descriptive name.
 
 import os
 import sys
@@ -23,6 +23,7 @@ where ZASSETURL NOTNULL;
 """
 
 def check_imports():
+    """ Prompts for password to install dependencies, if needed """
     try:
         import mp3_tagger
     except ImportError:
