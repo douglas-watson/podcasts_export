@@ -2,7 +2,9 @@
 #
 #  Podcasts Export
 #  ---------------
-#  Douglas Watson, 2020 Intended for use within an Automator workflow.
+#  Douglas Watson, 2020, MIT License
+# 
+#  Intended for use within an Automator workflow.
 #
 #  Receives a destination folder, finds Apple Podcasts episodes that have been
 #  downloaded, then copies those files into a new folder giving them a more
