@@ -1,0 +1,4 @@
+*.mp3
+*.sql
+*.sqlite
+.vscode
