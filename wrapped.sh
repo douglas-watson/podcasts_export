@@ -1,3 +1,6 @@
+#!/bin/bash
+
+python3 - $1 <<EOF
 #!/usr/bin/env python3
 #
 #  Podcasts Export
@@ -70,3 +73,5 @@ if __name__ == "__main__":
     from mutagen.easyid3 import EasyID3
 
     main(db_path, output_dir)
+
+EOF
