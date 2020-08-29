@@ -42,11 +42,11 @@ def main(db_path, output_dir):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     for author, podcast, title, path in get_downloaded_episodes(db_path):
+        safe_title = title.replace('/', '|').replace(':', ',')
         dest_path = os.path.join(output_dir,
-                                 u"{}-{}-{}.mp3".format(author, podcast, title))
+                                 u"{}-{}-{}.mp3".format(author, podcast, safe_title))
         shutil.copy(urllib.parse.unquote(path[len('file://'):]), dest_path)
 
-        print(author)
 
         mp3 = MP3(dest_path, ID3=EasyID3)
         if mp3.tags is None:
