@@ -46,19 +46,24 @@ def main(db_path, output_dir):
         os.makedirs(output_dir)
     for author, podcast, title, path in get_downloaded_episodes(db_path):
         safe_title = title.replace('/', '|').replace(':', ',')
+        safe_podcast = podcast.replace('/', '|').replace(':', ',')
+        safe_author = author.replace('/', '|').replace(':', ',')
+
         dest_path = os.path.join(output_dir,
-                                 u"{}-{}-{}.mp3".format(author, podcast, safe_title))
+                                 u"{}-{}-{}.mp3".format(safe_author, safe_podcast, safe_title))
         shutil.copy(urllib.parse.unquote(path[len('file://'):]), dest_path)
 
-
-        mp3 = MP3(dest_path, ID3=EasyID3)
+        try:
+            mp3 = MP3(dest_path, ID3=EasyID3)
+        except HeaderNotFoundError:
+            print(u"Corrupted file: {} - {}".format(podcast, title))
+            continue
         if mp3.tags is None:
             mp3.add_tags()
         mp3.tags['artist'] = author
         mp3.tags['album'] = podcast
         mp3.tags['title'] = title
         mp3.save()
-
 
 if __name__ == "__main__":
     if len(sys.argv) <= 1:
@@ -69,9 +74,8 @@ if __name__ == "__main__":
         "~/Library/Group Containers/243LU875E5.groups.com.apple.podcasts/Documents/MTLibrary.sqlite")
 
     check_imports()
-    from mutagen.mp3 import MP3
+    from mutagen.mp3 import MP3, HeaderNotFoundError
     from mutagen.easyid3 import EasyID3
 
     main(db_path, output_dir)
-
 EOF
