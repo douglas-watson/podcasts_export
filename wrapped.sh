@@ -1,6 +1,6 @@
 #!/bin/bash
 
-python3 - $1 <<EOF
+python3 - "$1" <<EOF
 #!/usr/bin/env python3
 #
 #  Podcasts Export
