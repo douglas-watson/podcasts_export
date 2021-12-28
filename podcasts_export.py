@@ -15,9 +15,10 @@ import sys
 import shutil
 import urllib.parse
 import sqlite3
+import datetime
 
 SQL = """
-SELECT p.ZAUTHOR, p.ZTITLE, e.ZTITLE, e.ZASSETURL
+SELECT p.ZAUTHOR, p.ZTITLE, e.ZTITLE, e.ZASSETURL, e.ZPUBDATE
 from ZMTEPISODE e 
 join ZMTPODCAST p
     on e.ZPODCASTUUID = p.ZUUID 
@@ -41,13 +42,14 @@ def get_downloaded_episodes(db_path):
 def main(db_path, output_dir):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
-    for author, podcast, title, path in get_downloaded_episodes(db_path):
+    for author, podcast, title, path, zpubdate in get_downloaded_episodes(db_path):
         safe_title = title.replace('/', '|').replace(':', ',')
         safe_podcast = podcast.replace('/', '|').replace(':', ',')
         safe_author = author.replace('/', '|').replace(':', ',')
+        pubdate = datetime.datetime(2001, 1, 1) + datetime.timedelta(seconds=zpubdate)
 
         dest_path = os.path.join(output_dir,
-                                 u"{}-{}-{}.mp3".format(safe_author, safe_podcast, safe_title))
+                                 u"{}-{}-{:%Y.%m.%d}-{}.mp3".format(safe_author, safe_podcast, pubdate, safe_title))
         shutil.copy(urllib.parse.unquote(path[len('file://'):]), dest_path)
 
         try:
