@@ -48,8 +48,12 @@ def main(db_path, output_dir):
         safe_author = author.replace('/', '|').replace(':', ',')
         pubdate = datetime.datetime(2001, 1, 1) + datetime.timedelta(seconds=zpubdate)
 
-        dest_path = os.path.join(output_dir,
-                                 u"{}-{}-{:%Y.%m.%d}-{}.mp3".format(safe_author, safe_podcast, pubdate, safe_title))
+        podcast_path = os.path.join(output_dir, safe_podcast)
+        if not os.path.exists(podcast_path):
+            os.makedirs(podcast_path)
+
+        dest_path = os.path.join(podcast_path,
+                                 u"{:%Y.%m.%d}-{}-({}).mp3".format(pubdate, safe_title[0:140], safe_author[0:100]))
         shutil.copy(urllib.parse.unquote(path[len('file://'):]), dest_path)
 
         try:
