@@ -1,6 +1,6 @@
 #!/bin/bash
 
-python3 - "$1" <<EOF
+/usr/bin/python3 - "$1" <<EOF
 #!/usr/bin/env python3
 #
 #  Podcasts Export
@@ -57,7 +57,11 @@ def main(db_path, output_dir):
 
         dest_path = os.path.join(podcast_path,
                                  u"{:%Y.%m.%d}-{}-({}).mp3".format(pubdate, safe_title[0:140], safe_author[0:100]))
-        shutil.copy(urllib.parse.unquote(path[len('file://'):]), dest_path)
+        try:
+            shutil.copy(urllib.parse.unquote(path[len('file://'):]), dest_path)
+        except IsADirectoryError:
+            print(u"Failed to export {} - {}, media file is a movie".format(podcast, title))
+            continue
 
         try:
             mp3 = MP3(dest_path, ID3=EasyID3)
@@ -84,4 +88,5 @@ if __name__ == "__main__":
     from mutagen.easyid3 import EasyID3
 
     main(db_path, output_dir)
+
 EOF
